@@ -7,6 +7,8 @@ import java.sql.SQLException;
 public class BaseDAOImpl {
 
     public Connection getConnection() throws SQLException {
-        return DriverManager.getConnection("jdbc:mysql://localhost:3306/mc2pd?useSSL=false&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC", "root", "admin");
+        return DriverManager.getConnection(
+                "jdbc:mysql://localhost:3306/mc2pd-specialist?useSSL=false&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC",
+                "root", "admin");
     }
 }
