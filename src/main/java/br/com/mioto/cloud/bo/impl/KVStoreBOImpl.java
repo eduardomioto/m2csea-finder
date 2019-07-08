@@ -1,18 +1,23 @@
 package br.com.mioto.cloud.bo.impl;
 
-import br.com.mioto.cloud.bo.KVStoreBO;
-import br.com.mioto.cloud.controllers.ConsulController;
-import br.com.mioto.cloud.vo.Microservice;
-import com.ecwid.consul.v1.ConsulClient;
-import com.ecwid.consul.v1.QueryParams;
-import com.ecwid.consul.v1.kv.model.GetValue;
-import com.google.gson.Gson;
+import java.util.Base64;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import com.ecwid.consul.v1.ConsulClient;
+import com.ecwid.consul.v1.QueryParams;
+import com.ecwid.consul.v1.kv.model.GetValue;
+import com.google.gson.Gson;
+
+import br.com.mioto.cloud.bo.KVStoreBO;
+import br.com.mioto.cloud.vo.Microservice;
 
 /**
  * Created by mioto on 04/06/17.
@@ -29,22 +34,23 @@ public class KVStoreBOImpl implements KVStoreBO {
 
     /**
      * Set of Services with dependencies
+     * 
      * @return
      */
     public Set<Microservice> kvGet() {
 
-        Map<String, List<String>> mapServices = this.getCatalogServices();
+        final Map<String, List<String>> mapServices = this.getCatalogServices();
 
-        Set<Microservice> dependenciesSet = new HashSet<Microservice>();
+        final Set<Microservice> dependenciesSet = new HashSet<Microservice>();
 
-        if(mapServices != null){
-            Set<String> servicesSet = mapServices.keySet();
-            for (String service: servicesSet) {
+        if (mapServices != null) {
+            final Set<String> servicesSet = mapServices.keySet();
+            for (final String service : servicesSet) {
 
-                String kvValue = this.getKV(service);
+                final String kvValue = this.getKV(service);
 
-                if(kvValue != null){
-                    Microservice microservice = this.treatKVCatalog(service, kvValue);
+                if (kvValue != null) {
+                    final Microservice microservice = this.treatKVCatalog(service, kvValue);
                     dependenciesSet.add(microservice);
                 }
             }
@@ -54,14 +60,15 @@ public class KVStoreBOImpl implements KVStoreBO {
 
     /**
      * Convert Json value to Object
+     * 
      * @param key
      * @param kvValue
      * @return
      */
-    private Microservice treatKVCatalog(String key, String kvValue){
+    private Microservice treatKVCatalog(final String key, final String kvValue) {
 
-        Gson gson = new Gson();
-        Microservice microservice = gson.fromJson(kvValue, Microservice.class);
+        final Gson gson = new Gson();
+        final Microservice microservice = gson.fromJson(kvValue, Microservice.class);
         microservice.setName(key);
 
         return microservice;
@@ -69,19 +76,21 @@ public class KVStoreBOImpl implements KVStoreBO {
 
     /**
      * Return the value related to a key on K/V Store
+     * 
      * @param key
      * @return value
      */
-    private String getKV(String key){
-        GetValue getValue = consulClient.getKVValue(key).getValue();
+    private String getKV(final String key) {
+        final GetValue getValue = consulClient.getKVValue(key).getValue();
         return getValue == null ? null : new String(Base64.getDecoder().decode(getValue.getValue()));
     }
 
     /**
      * Get all services present on Service Catalog
+     * 
      * @return
      */
-    public Map<String, List<String>> getCatalogServices(){
+    public Map<String, List<String>> getCatalogServices() {
         return consulClient.getCatalogServices(QueryParams.DEFAULT).getValue();
     }
 }
