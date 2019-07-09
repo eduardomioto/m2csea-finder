@@ -22,13 +22,13 @@ spring:
  profiles: dev
  cloud:
   consul:
-   host: 127.0.0.1
+   host: consul
    port: 8500
    discovery:
     healthCheckInterval: 15s
  data:
   neo4j:
-   uri: bolt://127.0.0.1:7687
+   uri: bolt://neo4j:7687
    username: neo4j
    password: admin
  jmx:
@@ -38,13 +38,13 @@ spring:
  profiles: hml
  cloud:
   consul:
-   host: 127.0.0.1
+   host: consul
    port: 8500
    discovery:
     healthCheckInterval: 15s
  data:
   neo4j:
-   uri: bolt://127.0.0.1:7687
+   uri: bolt://neo4j:7687
    username: neo4j
    password: admin
  jmx:
