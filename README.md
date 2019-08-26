@@ -1,4 +1,4 @@
-MC2PD - Microservice Communication Critical Path Discovery - Finder Module
+M2CSEA - Finder Module
 --------------
 [![Build Status](https://travis-ci.org/eduardomioto/mc2pd-finder.svg?branch=master)](https://travis-ci.org/eduardomioto/mc2pd-finder)
 
