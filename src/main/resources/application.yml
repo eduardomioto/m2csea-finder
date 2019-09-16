@@ -14,7 +14,7 @@ management:
     enabled: false
 
 server:
- port: 19100
+ port: 19101
 
 project:
   name: mc2pd-finder
