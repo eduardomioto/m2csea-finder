@@ -1,18 +1,28 @@
 package br.com.mioto.cloud.controllers;
 
-import br.com.mioto.cloud.bo.FinderBO;
-import br.com.mioto.cloud.vo.Edges;
-import br.com.mioto.cloud.vo.Nodes;
-import br.com.mioto.cloud.vo.IncomingOutgoing;
-import br.com.mioto.cloud.vo.Microservice;
-import br.com.mioto.cloud.vo.Response;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
+
+import javax.ws.rs.Produces;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.ws.rs.Produces;
-import java.util.*;
+import br.com.mioto.cloud.bo.FinderBO;
+import br.com.mioto.cloud.vo.Edges;
+import br.com.mioto.cloud.vo.IncomingOutgoing;
+import br.com.mioto.cloud.vo.Microservice;
+import br.com.mioto.cloud.vo.Nodes;
+import br.com.mioto.cloud.vo.Response;
 
 @CrossOrigin
 @RestController
@@ -54,9 +64,9 @@ public class FinderController {
     @RequestMapping("/findAll")
     @ResponseBody
     public List<String> findAllMicroservices() {
-        List<String> listMicroservices = new ArrayList<>();
-        Iterable<Microservice> microservicesFullList = finderBO.findAll();
-        for (Microservice microservice: microservicesFullList) {
+        final List<String> listMicroservices = new ArrayList<>();
+        final Iterable<Microservice> microservicesFullList = finderBO.findAll();
+        for (final Microservice microservice: microservicesFullList) {
             listMicroservices.add(microservice.getName());
         }
 
@@ -74,13 +84,13 @@ public class FinderController {
     @ResponseBody
     @Produces("application/json")
     public Response graph() {
-        Iterable<Microservice> microservicesList = finderBO.findAll();
-        Collection<IncomingOutgoing> inOutList = finderBO.getMicroservicesInOut();
+        final Iterable<Microservice> microservicesList = finderBO.findAll();
+        final Collection<IncomingOutgoing> inOutList = finderBO.getMicroservicesInOut();
 
-        Response response = new Response();
+        final Response response = new Response();
 
-        List<Nodes> nodes =  new ArrayList<>();
-        List<Edges> edges  =  new ArrayList<>();
+        final List<Nodes> nodes =  new ArrayList<>();
+        final List<Edges> edges  =  new ArrayList<>();
 
         //temporario >> será substituito pela logica de descoberta de criticidade
         int criticalInt = 0;
@@ -89,9 +99,9 @@ public class FinderController {
 
         Double mostCritical = 0.0;
         String microserviceMostCritical = "";
-        for (IncomingOutgoing inOut: inOutList) {
-            Double in = inOut.getIncoming() * 1.5;
-            Double out = inOut.getOutgoing() * 0.5;
+        for (final IncomingOutgoing inOut: inOutList) {
+            final Double in = inOut.getIncoming() * 1.5;
+            final Double out = inOut.getOutgoing() * 0.5;
             inOut.setCriticality(in + out);
             if(inOut.getCriticality() > mostCritical){
                 mostCritical = inOut.getCriticality();
@@ -99,10 +109,10 @@ public class FinderController {
             }
         }
 
-        for (Microservice microservice: microservicesList) {
+        for (final Microservice microservice: microservicesList) {
 
             IncomingOutgoing inOutMicro = new IncomingOutgoing();
-            for (IncomingOutgoing inOut: inOutList) {
+            for (final IncomingOutgoing inOut: inOutList) {
                 if(inOut.getName().equals(microservice.getName())){
                     inOutMicro = inOut;
                 }
@@ -116,9 +126,9 @@ public class FinderController {
                 nodes.add(new Nodes(microservice.getName(), "#b8b8b8", x, y, inOutMicro.getIncoming(), inOutMicro.getOutgoing(), inOutMicro.getCriticality()));
             }
 
-            Set<Microservice> microserviceDependencies = microservice.getDependencies();
-            if(microserviceDependencies != null && !microserviceDependencies.isEmpty()){
-                for (Microservice dependency : microserviceDependencies) {
+            final Set<Microservice> microserviceDependencies = microservice.getDependencies();
+            if((microserviceDependencies != null) && !microserviceDependencies.isEmpty()){
+                for (final Microservice dependency : microserviceDependencies) {
                    edges.add(new Edges(microservice.getName(), dependency.getName()));
                 }
             }
@@ -129,6 +139,12 @@ public class FinderController {
                 y = y+5;
             }
             x = x + 2;
+        }
+
+        try {
+            finderBO.saveCriticality(inOutList);
+        } catch (final SQLException e) {
+            log.error("Error: ", e);
         }
 
         response.setEdges(edges);
