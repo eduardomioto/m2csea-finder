@@ -244,7 +244,7 @@ public class FinderBOImpl implements FinderBO {
         final Integer criticalityFactor = this.calculateCriticalityFactor(incomingOutgoing.getCriticality());
 
         final String value = "Incoming: " + incomingOutgoing.getIncoming() + " | Outgoing: "  + incomingOutgoing.getOutgoing();
-        final CriticalityVO vo = criticalityBO.populate(incomingOutgoing.getName(), criticalityFactor, value, "computational-resource-usage");
+        final CriticalityVO vo = criticalityBO.populate(incomingOutgoing.getName(), criticalityFactor, value, "microservices-interdependecies");
         criticalityBO.saveCriticality(vo);
     }
 
