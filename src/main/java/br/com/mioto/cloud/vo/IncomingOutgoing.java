@@ -3,7 +3,7 @@ package br.com.mioto.cloud.vo;
 import org.springframework.data.neo4j.annotation.QueryResult;
 
 @QueryResult
-public class IncomingOutgoing {
+public class IncomingOutgoing implements Comparable<IncomingOutgoing> {
 
     private Long id;
 
@@ -54,5 +54,16 @@ public class IncomingOutgoing {
 
     public void setCriticality(Double criticality) {
         this.criticality = criticality;
+    }
+
+    @Override
+    public int compareTo(IncomingOutgoing o) {
+        if(criticality == o.getCriticality()) {
+            return 0;
+        } else if(criticality > o.getCriticality()) {
+            return 1;
+        } else {
+            return -1;
+        }
     }
 }

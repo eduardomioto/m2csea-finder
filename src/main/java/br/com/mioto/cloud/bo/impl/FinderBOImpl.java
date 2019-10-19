@@ -17,7 +17,6 @@ import br.com.mioto.cloud.bo.CriticalityBO;
 import br.com.mioto.cloud.bo.FinderBO;
 import br.com.mioto.cloud.bo.KVStoreBO;
 import br.com.mioto.cloud.dao.MicroserviceDAO;
-import br.com.mioto.cloud.dao.repo.MicroserviceRepository;
 import br.com.mioto.cloud.vo.CriticalityVO;
 import br.com.mioto.cloud.vo.IncomingOutgoing;
 import br.com.mioto.cloud.vo.Microservice;
@@ -26,9 +25,6 @@ import br.com.mioto.cloud.vo.Microservice;
 public class FinderBOImpl implements FinderBO {
 
     private static final Logger log = LoggerFactory.getLogger(FinderBOImpl.class);
-
-    @Autowired
-    private MicroserviceRepository repo;
 
     @Autowired
     private KVStoreBO kvStoreBO;
@@ -62,8 +58,6 @@ public class FinderBOImpl implements FinderBO {
     }
 
     private Set<Microservice> updateSavedMicroservices(Set<Microservice> microservicesSaved) {
-
-        final Set<Microservice> microservicesSavedDeps = microservicesSaved;
 
         final Set<Microservice> microservicesConsul = getMicroservicesFromConsul();
 
@@ -129,39 +123,6 @@ public class FinderBOImpl implements FinderBO {
      * @param microservice
      */
     private void associateMicroservicesDependencies2(Microservice microservice) {
-
-        log.info("### Verificando as dependencias do Microserviço {} ::", microservice.getName());
-
-        final Microservice microSaved = microserviceDAO.searchByName(microservice.getName());
-        log.info("Microservice Localizado na Base {} ::", microSaved);
-
-        final Set<Microservice> microserviceDependencies = microservice.getDependencies();
-
-        if ((microserviceDependencies != null) && !microserviceDependencies.isEmpty()) {
-            final Set<Microservice> microserviceFullDependencies = new HashSet<>();
-
-            for (final Microservice microserviceInstance : microserviceDependencies) {
-                final Microservice dependency = microserviceDAO.searchByName(microserviceInstance.getName());
-                if (dependency != null) {
-                    microserviceFullDependencies.add(dependency);
-                    log.info("------- Dependency {} ::", dependency.getName());
-                }
-            }
-            microSaved.setDependencies(microserviceFullDependencies);
-
-            log.info("Microservice Dependencies {} ::", microserviceFullDependencies);
-            microserviceDAO.save(microSaved);
-        }
-
-        log.info("### Finalizando Inserção ### ");
-    }
-
-    /**
-     * Associates the dependencies (nodes) with a microservice (node)
-     *
-     * @param microservice
-     */
-    private void associateMicroservicesDependencies(Microservice microservice) {
 
         log.info("### Verificando as dependencias do Microserviço {} ::", microservice.getName());
 
