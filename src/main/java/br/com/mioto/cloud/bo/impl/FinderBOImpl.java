@@ -228,8 +228,10 @@ public class FinderBOImpl implements FinderBO {
 
         Collections.sort(listIncomingOutgoing, Collections.reverseOrder());
 
-        final IncomingOutgoing incomingOutgoing = listIncomingOutgoing.get(0);
-        checkCriticality(incomingOutgoing);
+        if((listIncomingOutgoing != null) && (listIncomingOutgoing.size() > 0)){
+            final IncomingOutgoing incomingOutgoing = listIncomingOutgoing.get(0);
+            checkCriticality(incomingOutgoing);
+        }
 
     }
 

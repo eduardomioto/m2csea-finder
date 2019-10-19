@@ -10,8 +10,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.neo4j.repository.config.EnableNeo4jRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import lombok.extern.slf4j.Slf4j;
-
 @EnableTransactionManagement
 @EnableNeo4jRepositories("br.com.mioto.cloud.dao.repo")
 @Configuration
@@ -19,7 +17,6 @@ import lombok.extern.slf4j.Slf4j;
 @EnableDiscoveryClient
 @EnableConfigurationProperties
 @EnableFeignClients
-@Slf4j
 @SpringBootApplication
 public class FinderApp {
 
