@@ -117,39 +117,6 @@ public class FinderBOImpl implements FinderBO {
         return microserviceSaved;
     }
 
-    /**
-     * Associates the dependencies (nodes) with a microservice (node)
-     *
-     * @param microservice
-     */
-    private void associateMicroservicesDependencies2(Microservice microservice) {
-
-        log.info("### Verificando as dependencias do Microserviço {} ::", microservice.getName());
-
-        final Microservice microSaved = microserviceDAO.searchByName(microservice.getName());
-        log.info("Microservice Localizado na Base {} ::", microSaved);
-
-        final Set<Microservice> microserviceDependencies = microservice.getDependencies();
-
-        if ((microserviceDependencies != null) && !microserviceDependencies.isEmpty()) {
-            final Set<Microservice> microserviceFullDependencies = new HashSet<>();
-
-            for (final Microservice microserviceInstance : microserviceDependencies) {
-                final Microservice dependency = microserviceDAO.searchByName(microserviceInstance.getName());
-                if (dependency != null) {
-                    microserviceFullDependencies.add(dependency);
-                    log.info("------- Dependency {} ::", dependency.getName());
-                }
-            }
-            microSaved.setDependencies(microserviceFullDependencies);
-
-            log.info("Microservice Dependencies {} ::", microserviceFullDependencies);
-            microserviceDAO.save(microSaved);
-        }
-
-        log.info("### Finalizando Inserção ### ");
-    }
-
     @Override
     public void deleteAll() {
         microserviceDAO.deleteAll();
