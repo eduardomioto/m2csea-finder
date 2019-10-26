@@ -1,10 +1,9 @@
 package br.com.mioto.cloud.controllers;
 
-import br.com.mioto.cloud.bo.KVStoreBO;
-import br.com.mioto.cloud.vo.Microservice;
-import com.ecwid.consul.v1.ConsulClient;
-import com.ecwid.consul.v1.QueryParams;
-import com.ecwid.consul.v1.kv.model.GetValue;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.*;
+import br.com.mioto.cloud.bo.KVStoreBO;
+import br.com.mioto.cloud.vo.Microservice;
 
 @CrossOrigin
 @RestController
