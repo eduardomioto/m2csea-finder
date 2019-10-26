@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,35 +34,27 @@ public class FinderController {
     @Autowired
     private FinderBO finderBO;
 
-    @RequestMapping("/home")
-    @ResponseBody
-    public String home() {
-
-    	log.info("Fare Rest Service >> Alive!");
-        return "Fare Rest Service, I'm Alive";
-    }
-
-    @RequestMapping("/add")
+    @RequestMapping(value = "/add", method = RequestMethod.POST)
     @ResponseBody
     public Set<Microservice> addFromConsul() {
         finderBO.deleteAll();
         return finderBO.add();
     }
 
-    @RequestMapping("/delete")
+    @RequestMapping(value = "/delete", method = RequestMethod.DELETE)
     @ResponseBody
     public String delete() {
         finderBO.deleteAll();
         return "Deleted";
     }
 
-    @RequestMapping("/findAllRaw")
+    @RequestMapping(value = "/findAllRaw", method = RequestMethod.GET)
     @ResponseBody
     public Iterable<Microservice> findAll() {
         return finderBO.findAll();
     }
 
-    @RequestMapping("/findAll")
+    @RequestMapping(value = "/findAll", method = RequestMethod.GET)
     @ResponseBody
     public List<String> findAllMicroservices() {
         final List<String> listMicroservices = new ArrayList<>();
@@ -73,14 +66,14 @@ public class FinderController {
         return listMicroservices;
     }
 
-    @RequestMapping("/findByName")
+    @RequestMapping(value = "/findByName", method = RequestMethod.GET)
     @ResponseBody
     public Microservice findByName(@RequestParam(value = "name",required = true) String name) {
         return finderBO.searchByName(name);
     }
 
 
-    @RequestMapping("/graph")
+    @RequestMapping(value = "/graph", method = RequestMethod.GET)
     @ResponseBody
     @Produces("application/json")
     public Response graph() {
@@ -153,7 +146,7 @@ public class FinderController {
         return response;
     }
 
-    @RequestMapping("/in-out")
+    @RequestMapping(value = "/in-out", method = RequestMethod.GET)
     @ResponseBody
     public Collection<IncomingOutgoing> inOut() {
         return finderBO.getMicroservicesInOut();

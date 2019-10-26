@@ -33,7 +33,7 @@ public class ConsulController {
 	@Value("${spring.application.name:mcpd-finder}")
 	private String appName;
 
-	@RequestMapping("/me")
+	@RequestMapping(value = "/me", method = RequestMethod.GET)
 	public ServiceInstance me() {
 		return discoveryClient.getLocalServiceInstance();
 	}
